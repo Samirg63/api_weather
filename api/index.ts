@@ -23,8 +23,8 @@ async function main(){
     app.use('/auth',authRouter)
     app.use('/user',userRouter)
 
-    app.get('/hello',(req: Request, res:Response)=>{
-        res.send('Hellow world')
+    app.get('/',(req: Request, res:Response)=>{
+        res.send('Hello world')
     })
 
     app.listen(port,()=>{
