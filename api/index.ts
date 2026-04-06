@@ -1,12 +1,14 @@
 import express from 'express'
 import cors from 'cors'
+import dotenv from 'dotenv'
 import { Request, Response } from 'express';
-
 import { Mongo } from './db/mongo';
 
 //routes
 import authRouter from './routes/auth';
 import userRouter from './routes/user';
+
+dotenv.config()
 
 async function main(){
     const hostname = 'localhost'
@@ -14,10 +16,11 @@ async function main(){
     const app = express()
 
     app.use(express.json())
-    app.use(cors())
+    app.use(cors({
+        origin:process.env.DOMAIN
+    }))
 
     const db = await Mongo.connect()
-    console.log(db)
 
     //Rotas
     app.use('/auth',authRouter)

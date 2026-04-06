@@ -56,8 +56,8 @@ export class authController{
                 body:rest,
                 token:token
             }
-        } catch (error) {
-            return httpError(400,error)
+        } catch (error:unknown) {
+            return httpError(400,error as string)
         }
     }
 
@@ -73,15 +73,15 @@ export class authController{
                 let secret:string|undefined = process.env.SECRET
                 let token = jwt.sign({...rest},secret!)
                 return {...ok(200,"Correct credentials!"),
-                    body:rest,
-                    token:token
+                    token:token,
+                    body:rest
                 }
             }else{
                 return httpError(400,'wrong Credentials')
             }
             
-        } catch (error) {
-            return httpError(400,error)
+        } catch (error:unknown) {
+            return httpError(400,error as string)
         }
     }
 
@@ -97,8 +97,8 @@ export class authController{
                 body:User._doc,
                 token:token
             }
-        } catch (error) {
-            return httpError(400,error)
+        } catch (error:unknown) {
+            return httpError(400,error as string)
         }
     }
 
@@ -111,8 +111,8 @@ export class authController{
                 body:user!._doc,
                 token:token
             } 
-        } catch (error) {
-            return httpError(400,error)
+        } catch (error:unknown) {
+            return httpError(400,error as string)
         }
     }
 }

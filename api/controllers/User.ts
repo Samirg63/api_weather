@@ -1,19 +1,25 @@
 import { userModel } from "../db/schemas/userSchema";
 import { ObjectId } from "mongodb";
 import { ok, httpError } from '../utils/httpResponse'
+import { IAuthData } from "../utils/interfaces";
+import  jwt  from "jsonwebtoken";
 
-interface userData{
-    username?:string,
-    email?:string,
-    password?:string | number
-} 
+import dotenv from 'dotenv'
+dotenv.config()
 
 export class UserController{
 
-    static async getUserBy(method:string,data:string|number):Promise<userData | null>{
-        let requestData:userData | null = await userModel.findOne({[method]:data})
-        
+    async convertToken(token:string){
+        try {
+            let data = jwt.verify(token,process.env.SECRET as string)
+            return data;
+        } catch (error) {
+            throw error
+        }
+    }
 
+    static async getUserBy(method:string,data:string|number):Promise<IAuthData | null>{
+        let requestData:IAuthData | null = await userModel.findOne({[method]:data})
         return requestData;
     }
 
