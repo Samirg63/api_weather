@@ -8,7 +8,7 @@ import { Mongo } from './db/mongo';
 import authRouter from './routes/auth';
 import userRouter from './routes/user';
 import { HealthController } from './controllers/health';
-import { IHealthFullResponse } from './types/IHealthResponse';
+
 
 dotenv.config()
 

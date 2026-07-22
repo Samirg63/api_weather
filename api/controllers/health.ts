@@ -8,7 +8,8 @@ dotenv.config()
 export class HealthController{
     async verify(){
         let response:IHealthFullResponse = {
-            backend:{success:true}
+            backend:{success:true},
+            apis:[]
         }
 
         //Frontend verify
@@ -59,33 +60,29 @@ export class HealthController{
         
         
         //accuWeather
-        await fetch('https://dataservice.accuweather.com/currentconditions/v1/topcities/50',{
-            method:'GET',
-            headers: new Headers({
-                'Authorization': 'Bearer '+process.env.ACCUWEATHER_KEY as string
-            })
-        }).then(jsonResult=>
-        jsonResult.json()
-        .then((e)=>{
-            if(e.status){
-                
-                throw {status:e.status}
-            }
-            if(!response.apis){
-            response.apis = [];
-            }
-                response.apis=[{                   
-                    accuweather:{
-                        success:true
-                    }
-                }]            
 
-        })
-        .catch((e)=>{
-            
-            if(!response.apis){
-                response.apis = []
-            }  
+        try {
+            const accuRequest = await fetch('https://dataservice.accuweather.com/currentconditions/v1/topcities/50',{
+                method:'GET',
+                headers: new Headers({
+                    'Authorization': 'Bearer '+process.env.ACCUWEATHER_KEY as string
+                })
+            })
+            const AccuResult = await accuRequest.json();
+
+            //accuWeather only send a "status" when an error occurs
+            if(AccuResult.status){
+                throw {status:AccuResult.status}
+            }
+
+
+
+            response.apis!.push({
+                accuweather:{
+                    success:true
+                }
+            })
+        } catch (e:any) {
             response.apis!.push({
                 accuweather:{
                     success:false,
@@ -94,9 +91,8 @@ export class HealthController{
                     }
                 }
             })
-            
-        })
-        )
+        }
+        
         
         
 
